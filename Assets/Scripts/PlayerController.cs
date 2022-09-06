@@ -8,11 +8,17 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
 
     public float speed;
+    public Transform particulas;
+    private ParticleSystem systemaParticulas;
+
+    private Vector3 posicion;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody> ();
+        systemaParticulas = particulas.GetComponent<ParticleSystem> ();
+        systemaParticulas.Stop();
     }
 
     // Update is called once per frame
@@ -28,5 +34,17 @@ public class PlayerController : MonoBehaviour
         Vector3 movimiento = new Vector3 (moveHorizontal, 0.0f, moveVertical); 
 
         rb.AddForce (movimiento*speed);
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other.gameObject.CompareTag("Recolectable")){
+            posicion = other.gameObject.transform.position;
+            particulas.position = posicion;
+            systemaParticulas = particulas.GetComponent<ParticleSystem> ();
+            systemaParticulas.Play();
+            other.gameObject.SetActive(false);
+        } else {
+
+        }
     }
 }
